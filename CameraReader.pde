@@ -17,10 +17,10 @@ public class CameraReader {
   public Capture cam;
   public PImage captured;
 
-  public CameraReader(int w, int h) {
+  public CameraReader() {
     if (!USE_CAMERA) return;
 
-    cam = new Capture(self, w, h);
+    cam = new Capture(self, width, height);
     if (cam != null) cam.start();
   }
 

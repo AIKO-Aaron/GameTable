@@ -8,11 +8,7 @@ public class CameraInput {
 
   public static final int MAX_MOTION = 4;
 
-  public CameraReader reader;
-  
-  public CameraInput(int w, int h) {
-    reader = new CameraReader(w, h); 
-  }
+  public CameraReader reader = new CameraReader();
 
   public void update() {
     reader.update();

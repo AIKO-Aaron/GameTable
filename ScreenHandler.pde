@@ -11,7 +11,7 @@ public class ScreenHandler implements ReceiveEventHandler {
   private ArrayList<Class<? extends Screen>> registeredGames = new ArrayList<Class<? extends Screen>>();
   private ArrayList<String> registeredNames = new ArrayList<String>();
 
-  public CameraInput input = new CameraInput(width, height);
+  public CameraInput input = new CameraInput();
 
   /**
    Sets up the screen
