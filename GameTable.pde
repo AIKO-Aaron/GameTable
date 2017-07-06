@@ -15,13 +15,13 @@ public static final Thread.UncaughtExceptionHandler eh = new Thread.UncaughtExce
 };
 
 /**
-
-  WICHTIG:
-  ALLI SPIEL BRUUCHED EN CONSTRUCTOR OHNI PARAMETER!
-  ALLES WO MER MUES MACHE ISCH NOCHHER handler.register(SPIEL.class, "SPIELNAME"); IM SETUP O.Ä.
-  JAVA.LANG.REFLECT FOR THE WIN
-
-*/
+ 
+ WICHTIG:
+ ALLI SPIEL BRUUCHED EN CONSTRUCTOR OHNI PARAMETER!
+ ALLES WO MER MUES MACHE ISCH NOCHHER handler.register(SPIEL.class, "SPIELNAME"); IM SETUP O.Ä.
+ JAVA.LANG.REFLECT FOR THE WIN
+ 
+ */
 
 //
 // raumhöhe --> 2.5m
@@ -46,7 +46,18 @@ public static final Thread.UncaughtExceptionHandler eh = new Thread.UncaughtExce
  */
 
 void settings() {
-  size(960, 540);
+  float xy = 0;
+  
+  for (String s : Capture.list()) {
+    println(s);
+    String size = s.split(",")[1].substring(5);
+    int w = Integer.parseInt(size.split("x")[0]);
+    int h = Integer.parseInt(size.split("x")[1]);
+
+    xy = (float) w / (float) h;
+  }
+
+  size(960, (int)(960.0 / xy));
   Thread.setDefaultUncaughtExceptionHandler(eh); // Redirect errors to the exceptionhandler right?
 }
 

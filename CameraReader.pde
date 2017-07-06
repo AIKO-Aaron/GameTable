@@ -8,7 +8,7 @@ public class CameraReader {
   public static final int COLOR_START = 0xFFFF00FF;
   public static final int COLOR_END = 0xFFFF00FF;
 
-  public static final int PIXEL_SIZE = 50;
+  public static final int PIXEL_SIZE = 5;
 
   public static final boolean USE_CAMERA = true;
 
@@ -17,10 +17,11 @@ public class CameraReader {
   public Capture cam;
   public PImage captured;
 
-  public CameraReader() {
+  public CameraReader(int w, int h) {
     if (!USE_CAMERA) return;
-    cam = new Capture(self, width, height);
-    cam.start();
+
+    cam = new Capture(self, w, h);
+    if (cam != null) cam.start();
   }
 
   public void update() {
@@ -53,7 +54,7 @@ public class CameraReader {
     captured.loadPixels();
     for (int i = 0; i < captured.width; i++) {
       for (int j = 0; j < captured.height; j++) {
-        int col = captured.pixels[captured.width - 1 - i + j * cam.width];
+        int col = captured.pixels[captured.width - 1 - i + j * captured.width];
         int ctb = get(i, j);
 
         int re = abs((col >> 16) & 0xFF - (ctb >> 16) & 0xFF);
@@ -61,8 +62,8 @@ public class CameraReader {
         int be = abs((col) & 0xFF - (ctb) & 0xFF);
 
         /**if (re < MAX_ERROR && ge < MAX_ERROR && be < MAX_ERROR) {
-          captured.pixels[captured.width - 1 - i + j * captured.width] = 0xFFFF00FF;
-        }*/
+         captured.pixels[captured.width - 1 - i + j * captured.width] = 0xFFFF00FF;
+         }*/
       }
       captured.updatePixels();
     }

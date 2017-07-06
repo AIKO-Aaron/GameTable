@@ -8,7 +8,11 @@ public class CameraInput {
 
   public static final int MAX_MOTION = 4;
 
-  public CameraReader reader = new CameraReader();
+  public CameraReader reader;
+  
+  public CameraInput(int w, int h) {
+    reader = new CameraReader(w, h); 
+  }
 
   public void update() {
     reader.update();
@@ -27,7 +31,7 @@ public class CameraInput {
       p.x = mouseX;
       p.y = mouseY;
     }
-    if (p.z > 15 * 60) handler.removeScreen(mouseX / width); // onClose gets called right?
+    // if (p.z > 15 * 60) handler.removeScreen(mouseX / width); // onClose gets called right?
 
     lastTrackedHands.set(0, p);
 
