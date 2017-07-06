@@ -52,7 +52,7 @@ public class GamePong extends Game {
       if (ball.y > height / 2) xPos = botPlayerX;
 
       if (ball.x + 10 > xPos && ball.x - 10 < xPos + pong_width) {
-        createParticles(20, ball.x, ball.y, 2 * 60, 3 * 60); // because 60 fps
+        createParticles(20, ball.x, ball.y, 2 * 60, 3 * 60, 0xFF000000); // because 60 fps
 
         float angle = speed.heading();
         if (ball.y > height / 2) speed.rotate(PI / 3.0 * 2.0 * (ball.x - xPos - pong_width / 2) / pong_width - PI / 2 - angle);
