@@ -8,6 +8,8 @@ public class CameraReader {
   public static final int COLOR_START = 0xFFFF00FF;
   public static final int COLOR_END = 0xFFFF00FF;
 
+  public static final int PIXEL_SIZE = 50;
+
   public static final boolean USE_CAMERA = true;
 
   public static final int MAX_ERROR = 0x10;
@@ -58,9 +60,9 @@ public class CameraReader {
         int ge = abs((col >> 8) & 0xFF - (ctb >> 8) & 0xFF);
         int be = abs((col) & 0xFF - (ctb) & 0xFF);
 
-        if (re < MAX_ERROR && ge < MAX_ERROR && be < MAX_ERROR) {
+        /**if (re < MAX_ERROR && ge < MAX_ERROR && be < MAX_ERROR) {
           captured.pixels[captured.width - 1 - i + j * captured.width] = 0xFFFF00FF;
-        }
+        }*/
       }
       captured.updatePixels();
     }
@@ -68,8 +70,8 @@ public class CameraReader {
 
   public void render() {
     fill(COLOR_START);
-    rect(0, 0, 2, 2);
+    rect(0, 0, PIXEL_SIZE, PIXEL_SIZE);
     fill(COLOR_END);
-    rect(handler.NORMAL_WIDTH - 2, height - 2, 2, 2);
+    rect(handler.NORMAL_WIDTH - PIXEL_SIZE, height - PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
   }
 }

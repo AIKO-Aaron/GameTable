@@ -27,8 +27,8 @@ public abstract class Screen implements ReceiveEventHandler {
   /**
    Creates particles on this screen at the position x | y
    */
-  public void createParticles(int amount, float x, float y, int min, int max) {
-    handler.createParticles(amount, x + handler.getPos(this), y, min, max);
+  public void createParticles(int amount, float x, float y, int min, int max, int col) {
+    handler.createParticles(amount, x + handler.getPos(this), y, min, max, col);
   }
 
   public int getPos() {

@@ -153,8 +153,8 @@ public class ScreenHandler implements ReceiveEventHandler {
   /**
    Creates particles
    */
-  public void createParticles(int amount, float x, float y, int min, int max) {
-    particleGenerators.add(new ParticleGenerator(amount, x, y, min, max));
+  public void createParticles(int amount, float x, float y, int min, int max, int col) {
+    particleGenerators.add(new ParticleGenerator(amount, x, y, min, max, col));
   }
 
   /**
