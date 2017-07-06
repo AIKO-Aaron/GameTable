@@ -66,6 +66,12 @@ public class ScreenHandler implements ReceiveEventHandler {
         String nc = args[1];
         for (Screen s : currentScreens) if (s.id == id) return s.onConnect(client, nc);
         break;
+      case "stop":
+        rendering = false;
+        break;
+      case "start":
+        rendering = true;
+        break;
       }
     }
     return true; // If true disconnect the socket

@@ -3,6 +3,7 @@ WebProcess web;
 
 int lastTime = 0, fps = 0, lastFPS = 0; // FPS counter xD
 PApplet self = this;
+boolean rendering = true;
 
 public static final Thread.UncaughtExceptionHandler eh = new Thread.UncaughtExceptionHandler() {
   @Override
@@ -90,17 +91,18 @@ void setup() {
   handler.registerGame(DebugScreen.class, "Debug");
 
   frameRate(60); // 60 FPS
+
+  text("Hello World", 0, -10); // S'erschte mal text zeichne goht echli länger drum machemers do.
 }
 
 void draw() {
-  handler.render();
+  if (rendering) handler.render();
   if (millis() >= lastTime + 1000) {
     // println(fps);
     lastTime = millis();
     lastFPS = fps;
     fps = 0;
   } else ++fps;
-  text("Hello World", 0, -10); // S'erschte mal text zeichne goht echli länger drum machemers do.
 }
 
 void mousePressed() {
