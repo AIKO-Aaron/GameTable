@@ -69,6 +69,7 @@ void setup() {
   handler.registerGame(GamePong.class, "Pong");
   handler.registerGame(GamePianoTiles.class, "Piano Tiles");
   handler.registerGame(GameFruitNinja.class, "FruitNinja");
+  handler.registerGame(ScreenCredits.class, "Credits");
   handler.registerGame(DebugScreen.class, "Debug");
 
   frameRate(60); // 60 FPS

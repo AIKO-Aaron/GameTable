@@ -120,6 +120,7 @@ public class ScreenHandler implements ReceiveEventHandler {
   public void render() {
     renderScreens();
     renderParticles();
+    input.render();
   }
 
   /**

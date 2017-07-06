@@ -64,6 +64,10 @@ public class CameraInput {
     }
     return l;
   }
+  
+  public void render() {
+    reader.render();
+  }
 
   public void updateScreen(Screen s, int i) {
     if (s instanceof Game) {
