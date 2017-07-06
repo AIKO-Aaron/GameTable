@@ -2,9 +2,7 @@
  Creates a handful of particles to fly around
  */
 public class ParticleGenerator {
-  public static final int PARTICLE_WIDTH = 4; // Width of a particle
-  public static final int PARTICLE_HEIGHT = 2; // Height of a particle
-
+  
   /**
    One particle
    */
@@ -14,9 +12,13 @@ public class ParticleGenerator {
     public float rotation; // Direction of the Particle (0 - 2*PI)
     public int timeout; // The time until the particle will disappear
     public int col;
+    public int particleWidth;
+    public int particleHeight;
 
-    public Particle(float x, float y, int minTime, int maxTime, int col) { // Creates a new 
+    public Particle(float x, float y, int minTime, int maxTime, int col, int particleWidth, int particleHeight) { // Creates a new 
       this.col = col;
+      this.particleWidth = particleWidth;
+      this.particleHeight = particleHeight;
       position = new PVector(x, y); // The current position of the particle
       direction = PVector.random2D().mult(random(1)); // Unit vector * a random number between 0 & 1
       rotation = random(2 * PI);
@@ -28,8 +30,8 @@ public class ParticleGenerator {
 
   /**Create particles around a point
    */
-  public ParticleGenerator(int amount, float x, float y, int minTime, int maxTime, int col) {
-    while (amount-- > 0) particles.add(new Particle(x, y, minTime, maxTime, col)); // Create amount times a new particle
+  public ParticleGenerator(int amount, float x, float y, int minTime, int maxTime, int col, int particleWidth, int particleHeight) {
+    while (amount-- > 0) particles.add(new Particle(x, y, minTime, maxTime, col, particleWidth, particleHeight)); // Create amount times a new particle
   }
 
   public boolean render() { // Render all the particles
@@ -39,12 +41,12 @@ public class ParticleGenerator {
       fill(p.col);
       p.position.add(p.direction); // Vector addition x += px, y += py
       pushMatrix(); // Save the current postition & rotation
-      translate(p.position.x + PARTICLE_WIDTH / 2, p.position.y + PARTICLE_HEIGHT / 2); // Move position of 0|0 to the center of the particle
+      translate(p.position.x + p.particleWidth / 2, p.position.y + p.particleHeight / 2); // Move position of 0|0 to the center of the particle
       rotate(p.rotation); // Rotate with the rotation from the particle around (new) 0|0
 
-      rect(0, 0, PARTICLE_WIDTH, PARTICLE_HEIGHT); // Draw the particle
+      rect(0, 0, p.particleWidth, p.particleHeight); // Draw the particle
 
-      // translate(-p.position.x - PARTICLE_WIDTH / 2, -p.position.y - PARTICLE_HEIGHT / 2); // Move position back to where it was --> popMatrix does the same
+      // translate(-p.position.x - particleWidth / 2, -p.position.y - particleHeight / 2); // Move position back to where it was --> popMatrix does the same
 
       popMatrix(); // Restore the position & rotation from previously
       if (--p.timeout <= 0) particles.remove(p); // Reduce the time by one & remove the particle if less than 0

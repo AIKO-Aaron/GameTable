@@ -77,7 +77,7 @@ public class GameFruitNinja extends Game {
       
       //Aron frage , Check if hit
       if(abs(fPosx - Posx) < Fruit_Radius / 2 && abs(fPosy - Posy) < Fruit_Radius / 2){
-        createParticles(20, fPosx, fPosy, 30, 120, 0xFFFF0000);
+        createParticles(20, fPosx, fPosy, 30, 120, 0xFFFF0000, 10, 5);
         difficulty++;
         Fruits.remove(f);
         FruitsPos.remove(f);
