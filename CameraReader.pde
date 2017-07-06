@@ -8,11 +8,11 @@ public class CameraReader {
   public static final int COLOR_START = 0xFFFF00FF;
   public static final int COLOR_END = 0xFFFF00FF;
 
-  public static final int PIXEL_SIZE = 5;
+  public static final int PIXEL_SIZE = 1;
 
   public static final boolean USE_CAMERA = true;
 
-  public static final int MAX_ERROR = 0x10;
+  public static final int MAX_ERROR = 0x30;
 
   public Capture cam;
 
@@ -34,31 +34,38 @@ public class CameraReader {
 
     for (int i = 0; i < cam.width; i++) {
       boolean started = false;
+      int amount = 0;
       for (int j = 0; j < cam.height; j++) {
         int col = cam.pixels[i + j * cam.width];
-        int ctb = 0xFF2A53E0;
+        int ctb = 0xff4797ff; //0xff1628a4;
 
-        int re = abs((col >> 16) & 0xFF - (ctb >> 16) & 0xFF);
-        int ge = abs((col >> 8) & 0xFF - (ctb >> 8) & 0xFF);
-        int be = abs((col) & 0xFF - (ctb) & 0xFF);
+        int re = abs(abs((col >> 16) & 0xFF) - abs((ctb >> 16) & 0xFF));
+        int ge = abs(abs((col >> 8) & 0xFF) - abs((ctb >> 8) & 0xFF));
+        int be = abs(abs((col) & 0xFF) - abs((ctb) & 0xFF));
 
-        if (re < MAX_ERROR && ge < MAX_ERROR && be < MAX_ERROR && !started) {
+        if (re < MAX_ERROR && ge < MAX_ERROR) {
           started = true;
-          sx = i;
-          sy = j;
+          ++amount;
+          cam.pixels[i+ j * cam.width] = 0xFFFF00FF;
         } else if (started) {
           started = false;
-          ex = i;
-          ey = j;
+          if (amount > 40) {
+            if (sx == 0) sx = i;
+            else ex = i;
+            if (sy == 0) sy = j;
+            else ey = j;
+          }
+          amount = 0;
         }
       }
     }
 
-    for (int i = sx; i < ex; i++) {
+    /**for (int i = sx; i < ex; i++) {
       for (int j = sy; j < ey; j++) {
         cam.pixels[i + j * cam.width] = 0xFFFF00FF;
       }
-    }
+    }*/
+
     cam.updatePixels();
   }
 

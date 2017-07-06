@@ -91,7 +91,10 @@ void setup() {
   handler.registerGame(DebugScreen.class, "Debug");
 
   frameRate(60); // 60 FPS
-
+  
+  fill(0xFFFFFFFF);
+  rect(0, 0, width, height);
+  
   text("Hello World", 0, -10); // S'erschte mal text zeichne goht echli länger drum machemers do.
 }
 

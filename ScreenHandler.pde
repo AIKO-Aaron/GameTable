@@ -19,7 +19,11 @@ public class ScreenHandler implements ReceiveEventHandler {
   public ScreenHandler() {
     NORMAL_WIDTH = width;
     width /= MAX_SIMULT_SCREENS;
-    for (int i = 0; i < MAX_SIMULT_SCREENS; i++) currentScreens[i] = new HomeScreen();
+    
+    currentScreens[0] = new DebugScreen();
+    currentScreens[1] = new ColorScreen();
+    currentScreens[2] = new ColorScreen();
+    
   }
 
   public void registerGame(Class<? extends Screen> gameToAdd, String name) {
