@@ -27,7 +27,7 @@ function setup() {
 	core.addButton(new Button(0.5 - default_popup_size / 4, default_popup_size / 2, default_popup_size / 2, default_popup_size / 4, "Home", default_text_color, default_background_color, default_hover_color, goHome));
 	core.addButton(new Button(0.5 - default_popup_size / 2, default_popup_size / 4 * 3, default_popup_size / 2, default_popup_size / 4, "Left", default_text_color, default_background_color, default_hover_color, rotateLeft));
 	core.addButton(new Button(0.5, default_popup_size / 4 * 3, default_popup_size / 2, default_popup_size / 4, "Right", default_text_color, default_background_color, default_hover_color, rotateRight));
-	core.addButton(new Button(0.5 - default_popup_size / 4, default_popup_size, default_popup_size / 2, default_popup_size / 4, "Right", default_text_color, default_background_color, default_hover_color, rotateRight));
+	core.addButton(new Button(0.5 - default_popup_size / 4, default_popup_size, default_popup_size / 2, default_popup_size / 4, "Down", default_text_color, default_background_color, default_hover_color, moveDown));
 
 
 	postRequestAsync("!gc<" + getUrlVars().id + ",listener>", goHome);
@@ -40,7 +40,7 @@ function goHome() {
 	window.location.href = "http://" + window.location.host;
 }
 
-function goDown() {
+function moveDown() {
 	postRequestAsync("!gc<" + getUrlVars().id + ",down>", null);
 }
 

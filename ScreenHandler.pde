@@ -51,7 +51,7 @@ public class ScreenHandler implements ReceiveEventHandler {
     if (data.startsWith("!")) {
       String code = data.substring(1, 3);
       String[] args = data.substring(data.indexOf("<") + 1, data.lastIndexOf(">")).split(",");
-
+        println(code);
       switch(code) {
       case "cg":
         println("Connecting to game: " + args[0]);
@@ -65,6 +65,12 @@ public class ScreenHandler implements ReceiveEventHandler {
         int id = Integer.parseInt(args[0]);
         String nc = args[1];
         for (Screen s : currentScreens) if (s.id == id) return s.onConnect(client, nc);
+        break;
+      case "qr":
+        rendering = false;
+        break;
+      case "sr":
+        rendering = true;
         break;
       }
     }

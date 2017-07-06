@@ -27,7 +27,7 @@ private class TetrisBricks {
     location = new PVector(x, y);
     this.col = col;
     rotation = 4 - (rotation % 4);
-    while(--rotation >= 0) rotateRight();
+    while (--rotation >= 0) rotateRight();
   }
 
   public void render(int off) {
@@ -79,7 +79,10 @@ public class GameTetris extends Game implements ReceiveEventHandler {
     super(1);
     offset = height % RECT_SIZE;
 
-    // 7 pieces because w = 8
+    placedBricks.add(new TetrisBricks(T_SHAPE, 1, (int) (height / RECT_SIZE) - 1, 0xFFFFFF, 0));
+    placedBricks.add(new TetrisBricks(T_SHAPE, 4, (int) (height / RECT_SIZE) - 1, 0xFFFFFF, 0));
+    placedBricks.add(new TetrisBricks(LINE, 7, (int) (height / RECT_SIZE) - 3, 0xFFFFFF, 0));
+
 
     currentBrick = new TetrisBricks(LEFT_L, (int) (width / RECT_SIZE) / 2, 0, 0xFFFFFF, 2);
     // createNewBrick();
@@ -168,26 +171,27 @@ public class GameTetris extends Game implements ReceiveEventHandler {
 
   public ArrayList<PVector[]> getPieces(TetrisBricks brick) {
     ArrayList<PVector[]> broken = new ArrayList<PVector[]>();
-    ArrayList<PVector> fo = new ArrayList<PVector>();
     ArrayList<PVector> foundPieces = new ArrayList<PVector>();
 
-    int index = 0;
-    while (index < brick.places.length && brick.places[index].x == -100 && brick.places[index].y == -100) index++;
-    if (index == brick.places.length) return broken;
+    /**int index = 0;
+     while (index < brick.places.length && brick.places[index].x == -100 && brick.places[index].y == -100) index++;
+     if (index == brick.places.length - 1) return broken;*/
 
-    while (foundPieces.size() != brick.places.length) {
-      for (int i = index + 1; i < brick.places.length; i++) {
-        if (brick.places[i].x == -100 && brick.places[i].y == -100) fo.add(brick.places[i]);
-        if (!fo.contains(brick.places[i])) {
-          index = i; 
+    int index = 0;
+
+    do {
+      for (int i = index; i < brick.places.length; i++) {
+        if (brick.places[i].x != -100 && brick.places[i].y != -100) {
+          index = i;
           break;
         }
       }
+
       foundPieces.clear();
       foundPieces = getNeighbours(brick, foundPieces, brick.places[index]);
       broken.add(foundPieces.toArray(new PVector[foundPieces.size()]));
-      fo.addAll(foundPieces);
-    }
+      index++;
+    } while (index < brick.places.length - 1);
     return broken;
   }
 
@@ -195,12 +199,11 @@ public class GameTetris extends Game implements ReceiveEventHandler {
     int w = width / RECT_SIZE;
     int h = height / RECT_SIZE + 4;
 
-    println(w);
     TetrisBricks[] field = new TetrisBricks[w * h];
     for (TetrisBricks b : placedBricks) {
       for (PVector p : b.places) {
         if (p.x == - 100 && p.y == -100) continue; // Prevent out of bounds for the missing ones
-        
+
         int index = (int) p.x + (int) b.location.x + (int) (p.y + b.location.y) * w;
         if (index < 0 || index >= field.length) continue; // Game over?
         field[index] = b;
@@ -216,7 +219,6 @@ public class GameTetris extends Game implements ReceiveEventHandler {
       }
 
       if (lc) {
-        println("Clearing line!");
         for (int j = 0; j < w; j++) {
           TetrisBricks b = field[i * w + j];
           for (int k = 0; k < b.places.length; k++) {
@@ -229,7 +231,7 @@ public class GameTetris extends Game implements ReceiveEventHandler {
         }
       }
     }
-    println("Moving everything down");
+
     // TODO create new tetrisbricks for each part that can fall down, if the piece was sperated
     for (TetrisBricks piece : toMoveDown) {
       ArrayList<PVector[]> p = getPieces(piece);
@@ -239,11 +241,11 @@ public class GameTetris extends Game implements ReceiveEventHandler {
         placedBricks.remove(piece);
         for (int k = 0; k < p.size(); k++) {
           TetrisBricks b = new TetrisBricks(p.get(k), (int) piece.location.x, (int) piece.location.y, piece.col, 0);
-          b = applyGravity(b);
+          //b = applyGravity(b);
           placedBricks.add(b);
         }
       } else if (p.size() == 1) {
-        placedBricks.set(placedBricks.indexOf(piece), applyGravity(piece));
+        placedBricks.set(placedBricks.indexOf(piece), piece);
       } else {
         println("Piece removed entirely");
         placedBricks.remove(piece);
@@ -252,25 +254,27 @@ public class GameTetris extends Game implements ReceiveEventHandler {
   }
 
   public TetrisBricks applyGravity(TetrisBricks bricks) {
-    while (true) {
-      ++bricks.location.y;
+    boolean canMoveDown = true;
 
-      for (PVector v : bricks.places) {
-        if (bricks.location.y + v.y > (height / RECT_SIZE)) {
-          --bricks.location.y;
-          return bricks;
-        }
-      }
-      // TODO check every position in the brick if a brick is below & if yes fix it & spawn a new brick --> done maybe
-
-      for (int i = 0; i < placedBricks.size(); i++) { // ConcurrentModification Errors are shit
-        TetrisBricks b = placedBricks.get(i);
-        if (b != null && b != bricks && b.collides(bricks)) {
-          --bricks.location.y;
-          return bricks;
-        }
+    for (PVector v : bricks.places) {
+      if (bricks.location.y + v.y > (height / RECT_SIZE)) {
+        canMoveDown = false;
+        return bricks;
       }
     }
+    // TODO check every position in the brick if a brick is below & if yes fix it & spawn a new brick --> done maybe
+
+    for (int i = 0; i < placedBricks.size(); i++) { // ConcurrentModification Errors are shit
+      TetrisBricks b = placedBricks.get(i);
+      if (b != null && b != bricks && b.collides(bricks)) {
+        canMoveDown = false;
+        return bricks;
+      }
+    }
+
+    bricks.location.y++;
+
+      return bricks;
   }
 
   public void createNewBrick() {
@@ -327,6 +331,7 @@ public class GameTetris extends Game implements ReceiveEventHandler {
 
         for (int i = 0; i < placedBricks.size(); i++) { // ConcurrentModification Errors are shit
           TetrisBricks b = placedBricks.get(i);
+          b = applyGravity(b);
           if (b != null && b.collides(currentBrick)) {
             createNewBrick();
             break;

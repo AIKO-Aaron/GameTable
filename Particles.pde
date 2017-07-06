@@ -44,7 +44,7 @@ public class ParticleGenerator {
       translate(p.position.x + p.particleWidth / 2, p.position.y + p.particleHeight / 2); // Move position of 0|0 to the center of the particle
       rotate(p.rotation); // Rotate with the rotation from the particle around (new) 0|0
 
-      rect(0, 0, p.particleWidth, p.particleHeight); // Draw the particle
+      rect(0, 0, p.particleWidth, p.particleHeight, 4, 4, 4, 4); // Draw the particle
 
       // translate(-p.position.x - particleWidth / 2, -p.position.y - particleHeight / 2); // Move position back to where it was --> popMatrix does the same
 
