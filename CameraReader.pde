@@ -10,12 +10,11 @@ public class CameraReader {
 
   public static final int PIXEL_SIZE = 5;
 
-  public static final boolean USE_CAMERA = false;
+  public static final boolean USE_CAMERA = true;
 
   public static final int MAX_ERROR = 0x10;
 
   public Capture cam;
-  public PImage captured;
 
   public CameraReader() {
     if (!USE_CAMERA) return;
@@ -31,42 +30,36 @@ public class CameraReader {
 
     cam.loadPixels();
 
-    int start_pos = 0;
-    int end_pos = cam.width * cam.height - 1;
+    int sx = 0, sy = 0, ex = cam.width, ey = cam.height;
 
     for (int i = 0; i < cam.width; i++) {
+      boolean started = false;
       for (int j = 0; j < cam.height; j++) {
         int col = cam.pixels[i + j * cam.width];
-        if (col == COLOR_START && start_pos == 0) start_pos = i + j*cam.width;
-        if (col == COLOR_END) end_pos = i * cam.width;
-      }
-    }
-
-    int sx = start_pos % cam.width;
-    int sy = start_pos / cam.width;
-
-    int ex = end_pos % cam.width;
-    int ey = end_pos / cam.width;
-
-    captured = cam.get(sx, sy, ex, ey);
-    captured.resize((int) handler.NORMAL_WIDTH, (int) height);
-
-    captured.loadPixels();
-    for (int i = 0; i < captured.width; i++) {
-      for (int j = 0; j < captured.height; j++) {
-        int col = captured.pixels[captured.width - 1 - i + j * captured.width];
-        int ctb = get(i, j);
+        int ctb = 0xFF2A53E0;
 
         int re = abs((col >> 16) & 0xFF - (ctb >> 16) & 0xFF);
         int ge = abs((col >> 8) & 0xFF - (ctb >> 8) & 0xFF);
         int be = abs((col) & 0xFF - (ctb) & 0xFF);
 
-        /**if (re < MAX_ERROR && ge < MAX_ERROR && be < MAX_ERROR) {
-         captured.pixels[captured.width - 1 - i + j * captured.width] = 0xFFFF00FF;
-         }*/
+        if (re < MAX_ERROR && ge < MAX_ERROR && be < MAX_ERROR && !started) {
+          started = true;
+          sx = i;
+          sy = j;
+        } else if (started) {
+          started = false;
+          ex = i;
+          ey = j;
+        }
       }
-      captured.updatePixels();
     }
+
+    for (int i = sx; i < ex; i++) {
+      for (int j = sy; j < ey; j++) {
+        cam.pixels[i + j * cam.width] = 0xFFFF00FF;
+      }
+    }
+    cam.updatePixels();
   }
 
   public void render() {

@@ -1,4 +1,4 @@
-/** //<>//
+/** //<>// //<>//
  Extends game because we need the handleUserInput function
  */
 public class HomeScreen extends Game {
