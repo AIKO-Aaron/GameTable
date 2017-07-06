@@ -3,12 +3,13 @@ public class GameFruitNinja extends Game {
   public static final int MAX_POSITIONS = 10;
   public static final int BLADE_GROESSE = 2;
   public static final int BLADE_COLOR = 0xFF5050FF;
-  public static final int FRUITE_FREQ = 5;
-  public static final int FRUITE_MAXAMOUNT = 3;
+  public static final float FRUITE_FREQ = 5;
+  public static final int FRUITE_MAXAMOUNT = 5;
 
   private ArrayList<PVector> lastPositions = new ArrayList<PVector>();
   private PImage bg;
   private PImage laebeimg;
+  private PImage fruit_apple;
   private ArrayList<PVector> Fruits = new ArrayList<PVector>();
   private ArrayList<PVector> FruitsPos = new ArrayList<PVector>();
   private int timer = 0;
@@ -17,13 +18,14 @@ public class GameFruitNinja extends Game {
   private int Fruit_Radius = 40;
   private float random = random(0.5,1);
   private int laebe = 3;
-  private PImage img;
+  private int difficulty =1;
+
 
   public GameFruitNinja() {
     super(1);
     laebeimg = loadImage("textures/FruitNinja/fruitNinja_Live.png");
     bg = loadImage("textures/FruitNinja/fruitNinja_bg.jpg");
-    img = loadImage("textures/FruitNinja/fruitNinja_apple.png");
+    fruit_apple = loadImage("textures/FruitNinja/fruitNinja_apple.png");
   }
 
 
@@ -41,15 +43,13 @@ public class GameFruitNinja extends Game {
     imageMode(CORNER);
     Blade_render();
     Fruit_render();
-    
-    //renderRotatedImage(loadImage("textures/FruitNinja/fruitNinja_apple.jpg"), 50, 50, PI / 2);
   }
   public void update() {
     timer++;
     if (timer > 30 && lastPositions.size() > 0) lastPositions.remove(0); // Outofbounds!
 
 
-    if (frameRate * FRUITE_FREQ * random > counter) {
+    if (frameRate * FRUITE_FREQ * random / (1+(difficulty/5)) > counter) {
       counter++;
       random = random(0.5,1);
     } else {
@@ -77,6 +77,7 @@ public class GameFruitNinja extends Game {
       
       //Aron frage , Check if hit
       if(abs(fPosx - Posx) < Fruit_Radius / 2 && abs(fPosy - Posy) < Fruit_Radius / 2){
+        difficulty++;
         Fruits.remove(f);
         FruitsPos.remove(f);
       }
@@ -112,15 +113,16 @@ public class GameFruitNinja extends Game {
       int i = j;
       rect(p.x, p.y, BLADE_GROESSE * i, BLADE_GROESSE* i);
     }
-    
+
     rectMode(CORNER);
     noStroke();
   }
 
   public void Fruit_render() {
+    imageMode(CENTER);
     for (int f = 0; f < Fruits.size(); f++) {
-      //ellipse(FruitsPos.get(f).x, FruitsPos.get(f).y, Fruit_Radius, Fruit_Radius);
-      renderRotatedImage(img, (int) FruitsPos.get(f).x, (int) FruitsPos.get(f).y, PI / 2);
+      image(fruit_apple,FruitsPos.get(f).x, FruitsPos.get(f).y, Fruit_Radius*2, Fruit_Radius*2);
     }
+    imageMode(CORNER);
   }
 }
