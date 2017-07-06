@@ -10,7 +10,7 @@ public class CameraReader {
 
   public static final int PIXEL_SIZE = 5;
 
-  public static final boolean USE_CAMERA = true;
+  public static final boolean USE_CAMERA = false;
 
   public static final int MAX_ERROR = 0x10;
 

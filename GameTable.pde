@@ -46,19 +46,22 @@ public static final Thread.UncaughtExceptionHandler eh = new Thread.UncaughtExce
  */
 
 void settings() {
-  float xy = 0, nc = 40000;
-  
-  for (String s : Capture.list()) {
-    println(s);
-    String size = s.split(",")[1].substring(5);
-    int w = Integer.parseInt(size.split("x")[0]);
-    int h = Integer.parseInt(size.split("x")[1]);
-    
-    if(abs(w - 960) < nc) {
-      nc = abs(w - 960);
-      xy = (float) w / (float) h;
+  float xy = 0;
+  if (CameraReader.USE_CAMERA) {
+    float nc = 40000;
+
+    for (String s : Capture.list()) {
+      println(s);
+      String size = s.split(",")[1].substring(5);
+      int w = Integer.parseInt(size.split("x")[0]);
+      int h = Integer.parseInt(size.split("x")[1]);
+
+      if (abs(w - 960) < nc) {
+        nc = abs(w - 960);
+        xy = (float) w / (float) h;
+      }
     }
-  }
+  } else xy = 16.0 / 9.0;
 
   size(960, (int)(960.0 / xy));
   Thread.setDefaultUncaughtExceptionHandler(eh); // Redirect errors to the exceptionhandler right?
