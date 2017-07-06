@@ -96,6 +96,7 @@ void setup() {
 }
 
 void draw() {
+  clear();
   if (rendering) handler.render();
   if (millis() >= lastTime + 1000) {
     // println(fps);

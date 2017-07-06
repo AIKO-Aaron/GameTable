@@ -24,6 +24,9 @@ function setup() {
 	t1 = new TextField((1 - default_popup_size) / 2, default_popup_size / 2, 1 * default_popup_size, 0.5 * default_popup_size, "Pin", default_text_color, default_background_color, default_hover_color, true);
 	core.addTextField(t1);
 	core.addButton(new Button((1 - default_popup_size) / 2,  default_popup_size, 1 * default_popup_size, 0.5 * default_popup_size, "Verbinden", default_text_color, default_background_color, default_hover_color, function(){postRequestAsync("!cg<" + t1.text + ">", setGame); }));
+
+	core.addButton(new Button((1 - default_popup_size) / 2,  0, 0.5 * default_popup_size, 0.25 * default_popup_size, "Stop rendering", default_text_color, default_background_color, default_hover_color, function(){postRequestAsync("!qr<>"); }));
+	core.addButton(new Button((1 - default_popup_size) / 2 + 0.5 * default_popup_size, 0, 0.5 * default_popup_size, 0.25 * default_popup_size, "Start rendering", default_text_color, default_background_color, default_hover_color, function(){postRequestAsync("!sr<>"); }));
 }
 
 function setGame(response) {
