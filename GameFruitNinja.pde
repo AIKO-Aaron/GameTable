@@ -65,8 +65,8 @@ public class GameFruitNinja extends Game {
     for (int f = 0; f < Fruits.size(); f++) {
       float fPosx = FruitsPos.get(f).x;
       float fPosy = FruitsPos.get(f).y;
-      float Posx = lastPositions.get(lastPositions.size() - 1).x;
-      float Posy = lastPositions.get(lastPositions.size() - 1).y;
+      float Posx = mouseX;
+      float Posy = mouseY;
       
       //add Vector to pos
       (FruitsPos.get(f)).add(Fruits.get(f));
