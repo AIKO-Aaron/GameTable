@@ -18,7 +18,7 @@ public class GameFruitNinja extends Game {
   private int Fruit_Radius = 40;
   private float random = random(0.5,1);
   private int laebe = 3;
-  private int difficulty =1;
+  private int score = 1;
 
 
   public GameFruitNinja() {
@@ -34,6 +34,7 @@ public class GameFruitNinja extends Game {
     fill(0);
     textSize(32);
     text("Läbe:",10,40);
+    text("Score: " + (score - 1), width - 140, 40);
     textSize(12);
     //anzeige Leben
     imageMode(CENTER);
@@ -49,7 +50,7 @@ public class GameFruitNinja extends Game {
     if (timer > 30 && lastPositions.size() > 0) lastPositions.remove(0); // Outofbounds!
 
 
-    if (frameRate * FRUITE_FREQ * random / (1+(difficulty/5)) > counter) {
+    if (frameRate * FRUITE_FREQ * random / (1+(score/5)) > counter) {
       counter++;
       random = random(0.5,1);
     } else {
@@ -77,8 +78,8 @@ public class GameFruitNinja extends Game {
       
       //Aron frage , Check if hit
       if(abs(fPosx - Posx) < Fruit_Radius / 2 && abs(fPosy - Posy) < Fruit_Radius / 2){
-        createParticles(20, fPosx, fPosy, 30, 120, 0xFFFF0000, 10, 5);
-        difficulty++;
+        createParticles(20, fPosx, fPosy, 30, 60, 0xFFFF0000, 10, 5);
+        score++;
         Fruits.remove(f);
         FruitsPos.remove(f);
       }
