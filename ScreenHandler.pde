@@ -20,9 +20,11 @@ public class ScreenHandler implements ReceiveEventHandler {
     NORMAL_WIDTH = width;
     width /= MAX_SIMULT_SCREENS;
     
-    currentScreens[0] = new DebugScreen();
-    currentScreens[1] = new ColorScreen();
-    currentScreens[2] = new ColorScreen();
+    for(int i = 0; i< MAX_SIMULT_SCREENS; i++) currentScreens[i] = new HomeScreen();
+    
+    //currentScreens[0] = new DebugScreen();
+    //currentScreens[1] = new DebugScreen();
+    //currentScreens[2] = new DebugScreen();
     
   }
 
@@ -42,7 +44,7 @@ public class ScreenHandler implements ReceiveEventHandler {
   }
 
   public boolean idInUse(int id) {
-    for (Screen s : currentScreens) if (s.id == id) return true;
+    for (Screen s : currentScreens) if (s != null && s.id == id) return true;
     return false;
   }
 

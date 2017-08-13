@@ -68,7 +68,7 @@ public class GamePianoTiles extends Game {
       line(xStart, h * i - offset, xStart + w * FIELDS, h * i - offset);
 
       int p = nextTiles.get(i);
-      fill(i < nextPressed ? 0x7F : 0);
+      fill(i < nextPressed ? 0xFF00009F : 0xFF0000FF);
       rect(xStart + w * p, h * i - offset, w, h);
       //println(xStart);
     }

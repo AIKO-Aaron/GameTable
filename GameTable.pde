@@ -4,6 +4,7 @@ WebProcess web;
 int lastTime = 0, fps = 0, lastFPS = 0; // FPS counter xD
 PApplet self = this;
 boolean rendering = true;
+int startTime = 0;
 
 public static final Thread.UncaughtExceptionHandler eh = new Thread.UncaughtExceptionHandler() {
   @Override
