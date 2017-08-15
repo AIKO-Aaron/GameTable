@@ -86,7 +86,7 @@ public class GameTetris extends Game implements ReceiveEventHandler {
       i += maxAmount * FIELD_WIDTH; // new index
       indexes[index] = i; // arrays passed via pointer --> modify this array = modifying original
 
-      blockIDs[i] = blockID;
+      if (i >= 0 && i < FIELD_WIDTH * FIELD_HEIGHT) blockIDs[i] = blockID;
     }
 
     return maxAmount;
@@ -95,7 +95,7 @@ public class GameTetris extends Game implements ReceiveEventHandler {
   public boolean moveDown() {
     boolean canMoveDown = true;
     Integer[] indexes = blockIndexes.get(currentID);
-    if(indexes == null) return false;
+    if (indexes == null) return false;
     for (int index = 0; index < indexes.length; index++) {
       int i = indexes[index];
       int amount = 0;
@@ -168,7 +168,7 @@ public class GameTetris extends Game implements ReceiveEventHandler {
 
   public void setXPosition(int x) {
     Integer[] indexes = blockIndexes.get(currentID);
-    if(indexes == null) return;
+    if (indexes == null) return;
     int amount = x - (indexes[0] % FIELD_WIDTH);
 
     boolean trying = true;
@@ -212,10 +212,17 @@ public class GameTetris extends Game implements ReceiveEventHandler {
       int w = width / FIELD_WIDTH;
       int h = height / FIELD_HEIGHT;
 
+      fill(0xFF);
+      rect(FIELD_WIDTH * w, 0, width - 1, height);
+      
+      noStroke();
+
       int yOffset = height - FIELD_HEIGHT * h;
 
-      setXPosition(mouseX * FIELD_WIDTH / width);
+      // setXPosition(mouseX * FIELD_WIDTH / width);
 
+  
+      stroke(0xAA);
       for (int xx = 0; xx < FIELD_WIDTH; xx++) {
         for (int yy = 0; yy < FIELD_HEIGHT; yy++) {
           int index = blockIDs[xx + yy * FIELD_WIDTH];
@@ -309,7 +316,7 @@ public class GameTetris extends Game implements ReceiveEventHandler {
   }
 
   public void handleUserInput(int x, int y) {
-    setXPosition(x);
+    setXPosition(x * FIELD_WIDTH / width);
   }
 
   public void onClick(float x, float y) {
