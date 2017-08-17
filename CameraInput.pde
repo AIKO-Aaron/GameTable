@@ -1,45 +1,55 @@
+import java.util.Comparator;
+
 public class CameraInput {
   private ArrayList<PVector> lastTrackedHands = new ArrayList<PVector>();
-  private ArrayList<Integer> clicking = new ArrayList<Integer>(); // How long the same hand is on the same spot
+  private long noHandsThere = 0;
 
   public static final int NOT_PRESSED = 0;
   public static final int PRESSED = 1;
   public static final int PULLED = 2;
 
   public static final int MAX_MOTION = 4;
+  public static final int MIN_PIXELS_FOR_HAND = 5;
 
   public CameraReader reader = new CameraReader();
+
+  // Punkte am nächsten in der Mitte = Hände? --> Für Mehrspieler 2, für Einzelspieler die Punkte am weitesten oben (Mehrere, falls messfehler auftreten...)
 
   public void update() {
     reader.update();
 
-    if (lastTrackedHands.size() < 1) lastTrackedHands.add(new PVector(mouseX, mouseY, 0));
-    if (clicking.size() < 1) clicking.add(mousePressed ? PRESSED : NOT_PRESSED);
-    // if(timeOut.size() < 1) timeOut.add(new PVector(mouseX, mouseY, 0));
+    /**if (clicking.size() < 1) clicking.add(mousePressed ? PRESSED : NOT_PRESSED);*/
 
-    PVector p = lastTrackedHands.get(0);
-    if (abs(p.x - mouseX) <= MAX_MOTION && abs(p.y - mouseY) <= MAX_MOTION) {
-      p.z++;
-      p.x = mouseX;
-      p.y = mouseY;
-    } else {
-      p.z = 0;
-      p.x = mouseX;
-      p.y = mouseY;
+    lastTrackedHands.clear();
+
+    if (!CameraReader.USE_CAMERA && lastTrackedHands.size() < 1) lastTrackedHands.add(new PVector(mouseX, mouseY, 0));
+
+    for (int i = 0; i < reader.hands.size(); i++) {
+      CameraReader.Hand h = reader.hands.get(i);
+      if (h == null || h.count < 30) continue;
+
+      lastTrackedHands.add(new PVector(h.x, h.y, 0));
     }
-    // if (p.z > 15 * 60) handler.removeScreen(mouseX / width); // onClose gets called right?
 
-    lastTrackedHands.set(0, p);
 
-    // lastTrackedHands.set(0, new PVector(mouseX, mouseY));
-    if (clicking.get(0) != PULLED || !mousePressed) clicking.set(0, mousePressed ? PRESSED : NOT_PRESSED);
+    if (noHandsThere != 0 && System.nanoTime() - noHandsThere >= 10 * 1000000000) handler.removeScreen(0);
 
-    for (int j = 0; j < clicking.size(); j++) {
-      if (clicking.get(j) == PRESSED) {
-        handler.onClick((int) lastTrackedHands.get(j).x, (int) lastTrackedHands.get(j).y);
-        clicking.set(0, PULLED);
+    if (lastTrackedHands.size() == 0 && noHandsThere == 0) {
+      noHandsThere = System.nanoTime();
+      return;
+    } else for (int i = 0; i < lastTrackedHands.size(); i++) {
+      fill(0xFF00FFFF);
+      rect(lastTrackedHands.get(i).x - 2, lastTrackedHands.get(i).y - 2, 5, 5);
+    }
+
+    noHandsThere = 0;
+
+    lastTrackedHands.sort(new Comparator<PVector>() {
+      public int compare(PVector p1, PVector p2) {
+        return p1.y < p2.y ? -1 : p1.y == p2.y ? 0: 1;
       }
     }
+    );
   }
 
   public void resetTimer() {
@@ -48,11 +58,28 @@ public class CameraInput {
 
   public void updateGame(Game g, int i) {
     if (g != null) {
-      for (int j = 0; j < lastTrackedHands.size(); j++) {
-        PVector hand = lastTrackedHands.get(j);
-        if (hand != null && hand.x > i * width && hand.x < (i + 1) * width) {
-          g.handleUserInput((int) hand.x - i * width, (int) hand.y);
+      if (handler.getPlayerCount() != 2 || lastTrackedHands.size() < 2) {
+        for (int j = 0; j < lastTrackedHands.size() && j < 3; j++) {
+          PVector hand = lastTrackedHands.get(j);
+          if (hand != null && hand.x > i * width && hand.x < (i + 1) * width) {
+            g.handleUserInput((int) hand.x - i * width, (int) hand.y);
+          }
         }
+      } else {
+        int mid = height / 2;
+        int y1 = 0, ydif1 = height + 1, y2 = 0, ydif2 = height + 1;
+        for (int j = 0; j<  lastTrackedHands.size(); j++) {
+          PVector hand = lastTrackedHands.get(j);
+          if (ydif1 > abs(hand.y - mid)) {
+            ydif1 = (int) abs(hand.y - mid);
+            y1 = j;
+          } else if (ydif2 > abs(hand.y - mid)) {
+            ydif2 = (int) abs(hand.y - mid);
+            y2 = j;
+          }
+        }
+        g.handleUserInput((int) lastTrackedHands.get(y1).x - i * width, (int) lastTrackedHands.get(y1).y);
+        g.handleUserInput((int) lastTrackedHands.get(y2).x - i * width, (int) lastTrackedHands.get(y2).y);
       }
     }
   }
@@ -64,9 +91,13 @@ public class CameraInput {
     }
     return l;
   }
-  
+
   public void render() {
     reader.render();
+    for (int i = 0; i < lastTrackedHands.size() && i < 2; i++) {
+      fill(0xFF00FFFF);
+      rect(lastTrackedHands.get(i).x - 2, lastTrackedHands.get(i).y - 2, 5, 5);
+    }
   }
 
   public void updateScreen(Screen s, int i) {

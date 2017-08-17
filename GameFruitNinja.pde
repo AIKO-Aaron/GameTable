@@ -46,7 +46,7 @@ public class GameFruitNinja extends Game {
       image(laebeimg, 120 + i * 40, 30, 30, 30);
     }
     imageMode(CORNER);
-    Blade_render();
+   // Blade_render();
     Fruit_render();
   }
 
@@ -92,7 +92,7 @@ public class GameFruitNinja extends Game {
       }
       //Aaron frage , Check if hit
       if (abs(fPosx - Posx) < Fruit_Radius / 2 && abs(fPosy - Posy) < Fruit_Radius / 2) {
-        createParticles(20, fPosx, fPosy, 30, 60, 0xFFFF0000, 10, 5);
+        createParticles(10, fPosx, fPosy, 30, 60, 0xFFFF0000, 10, 5);
         score++;
         Fruits.remove(f);
         FruitsPos.remove(f);

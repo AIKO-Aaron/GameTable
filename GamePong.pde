@@ -16,12 +16,13 @@ public class GamePong extends Game {
 
   private int topPlayerScore = 0;
   private int botPlayerScore = 0;
+  private int ypos = 50;
 
   private int pong_width = 0;
 
   public GamePong() {
     super(2);
-    pong_width = (int)(width / 2);
+    pong_width = (int)(width / 5);
   }
 
   public void render() {
@@ -29,8 +30,8 @@ public class GamePong extends Game {
     rect(0, 0, width, height);
 
     fill(0x00);
-    rect(topPlayerX, 20, pong_width, 20);
-    rect(botPlayerX, height - 40, pong_width, 20);
+    rect(topPlayerX, ypos + 10, pong_width, 20);
+    rect(botPlayerX, height - 30 - ypos, pong_width, 20);
 
     ellipse(ball.x, ball.y, 20, 20);
 
@@ -45,9 +46,9 @@ public class GamePong extends Game {
 
     ball.add(speed);
 
-    if (ball.x < 10 || ball.x > width - 10) speed.x *= -1;
+    if (ball.x < ypos || ball.x > width - ypos) speed.x *= -1;
 
-    if (ball.y - 30 < 20 || ball.y + 20 > height - 30) {
+    if (ball.y - 40 < ypos || ball.y + ypos > height - 40) {
       int xPos = topPlayerX;
       if (ball.y > height / 2) xPos = botPlayerX;
 
@@ -57,7 +58,7 @@ public class GamePong extends Game {
         float angle = speed.heading();
         if (ball.y > height / 2) speed.rotate(PI / 3.0 * 2.0 * (ball.x - xPos - pong_width / 2) / pong_width - PI / 2 - angle);
         else speed.rotate(PI / 3.0 * 2.0 * (ball.x - xPos - pong_width / 2) / pong_width + PI / 2 - angle);
-      } else if (ball.y < 10 || ball.y - 10 > height) {
+      } else if (ball.y < ypos || ball.y - ypos > height) {
         speed.set(0, 0);
         if (ball.y < height / 2) ++botPlayerScore;
         else ++topPlayerScore;
@@ -75,11 +76,5 @@ public class GamePong extends Game {
       botPlayerX = x;
       botPlayerX = botPlayerX > width - pong_width ? width - pong_width : botPlayerX < 0 ? 0 : botPlayerX;
     }
-  }
-
-  public void onClick(float x, float y) {
-    speed.x = random(MAX_START_SPEED * 2) - MAX_START_SPEED; 
-    speed.y = random(MAX_START_SPEED * 2) - MAX_START_SPEED;
-    //setScreen(new GameNinJump());
   }
 }

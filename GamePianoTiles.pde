@@ -38,16 +38,7 @@ public class GamePianoTiles extends Game {
   public void createNext() {
     nextTiles.add((int) random(FIELDS));
     if (--nextPressed < 0) {
-      running = false;
-      fill(0xFF);
-      rect(0, 0, width, height);
-
-      stroke(0);
-      fill(0);
-      text("Verlorä", 100, 100);
-      text("Pünkt: " + speed, 80, 120);
-      println("Lost");
-      speed = 0;
+      closeScreen();
     }
     if (nextTiles.size() > FIELDS + 1) nextTiles.remove(0);
   }
@@ -68,7 +59,7 @@ public class GamePianoTiles extends Game {
       line(xStart, h * i - offset, xStart + w * FIELDS, h * i - offset);
 
       int p = nextTiles.get(i);
-      fill(i < nextPressed ? 0xFF00009F : 0xFF0000FF);
+      fill(i < nextPressed ? 0xFF9F0000 : 0xFF0000FF);
       rect(xStart + w * p, h * i - offset, w, h);
       //println(xStart);
     }

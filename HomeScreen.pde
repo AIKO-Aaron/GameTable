@@ -1,4 +1,4 @@
-/** //<>// //<>// //<>//
+/** //<>// //<>// //<>// //<>//
  Extends game because we need the handleUserInput function
  */
 public class HomeScreen extends Game {
@@ -11,7 +11,7 @@ public class HomeScreen extends Game {
 
   public HomeScreen() {
     // gameImages.add(loadImage("/hhh"));
-    super(0);
+    super(1);
 
     updateGames();
   }
@@ -27,7 +27,7 @@ public class HomeScreen extends Game {
       Class<? extends Screen> screenClass = handler.registeredGames.get(i);
       String name = handler.registeredNames.get(i);
       if (screenClass == null || name == null) continue;
-      buttons.add(new MenuButton(0, (int)((i + (float) size / 2.0) * height / (size * 2)), width, height / (size * 2), name, screenClass, this));
+      buttons.add(new MenuButton(0, (int)((i * 2) * height / (size * 2.0)), width, height / (size * 2), name, screenClass, this));
     }
   }
 
@@ -48,11 +48,5 @@ public class HomeScreen extends Game {
     }
 
     for (MenuButton button : buttons) button.render(handler.indexOf(this));
-  }
-
-  void onClick(float x, float y) {
-    // setScreen(y < height / 2 ? new GamePianoTiles() : new GamePong());
-    // setScreen(new GamePianoTiles(height / width));
-    for (MenuButton button : buttons) button.onClick(x, y);
   }
 }

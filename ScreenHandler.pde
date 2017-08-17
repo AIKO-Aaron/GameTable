@@ -4,7 +4,7 @@
 
 public class ScreenHandler implements ReceiveEventHandler {
 
-  public static final int MAX_SIMULT_SCREENS = 3; // How many games are simoultanously run
+  public static final int MAX_SIMULT_SCREENS = 1; // How many games are simoultanously run
   public int NORMAL_WIDTH = 0; // The width the whole screen has
   private Screen[] currentScreens = new Screen[MAX_SIMULT_SCREENS]; // The screens which are displayed
   private ArrayList<ParticleGenerator> particleGenerators = new ArrayList<ParticleGenerator>(); // All the particles on the displays
@@ -13,19 +13,23 @@ public class ScreenHandler implements ReceiveEventHandler {
 
   public CameraInput input = new CameraInput();
 
+  public int getPlayerCount() {
+    if (currentScreens[0] instanceof Game) return ((Game)currentScreens[0]).userCount;
+    return 0;
+  }
+
   /**
    Sets up the screen
    */
   public ScreenHandler() {
     NORMAL_WIDTH = width;
     width /= MAX_SIMULT_SCREENS;
-    
-    for(int i = 0; i< MAX_SIMULT_SCREENS; i++) currentScreens[i] = new HomeScreen();
-    
+
+    for (int i = 0; i < MAX_SIMULT_SCREENS; i++) currentScreens[i] = new HomeScreen();
+
     //currentScreens[0] = new DebugScreen();
     //currentScreens[1] = new DebugScreen();
     //currentScreens[2] = new DebugScreen();
-    
   }
 
   public void registerGame(Class<? extends Screen> gameToAdd, String name) {
@@ -57,7 +61,7 @@ public class ScreenHandler implements ReceiveEventHandler {
     if (data.startsWith("!")) {
       String code = data.substring(1, 3);
       String[] args = data.substring(data.indexOf("<") + 1, data.lastIndexOf(">")).split(",");
-        println(code);
+      println(code);
       switch(code) {
       case "cg":
         println("Connecting to game: " + args[0]);
@@ -133,16 +137,6 @@ public class ScreenHandler implements ReceiveEventHandler {
     renderScreens();
     renderParticles();
     input.render();
-  }
-
-  /**
-   When the mouse has been clicked
-   */
-  public void onClick(float x, float y) {
-    int screenClicked = (int)(x / width);
-    if (screenClicked > MAX_SIMULT_SCREENS) return;
-    Screen cs = currentScreens[screenClicked];
-    if (cs != null) cs.onClick(x - screenClicked * width, y);
   }
 
   public int indexOf(Screen s) {

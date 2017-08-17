@@ -65,8 +65,4 @@ public abstract class Screen implements ReceiveEventHandler {
    */
   public abstract void render();
 
-  /**
-   Called when the mouse button has been clicked
-   */
-  public abstract void onClick(float x, float y);
 }

@@ -5,18 +5,16 @@ import java.lang.reflect.*;
  */
 public class MenuButton {
 
-  public static final int BUTTON_COLOR = 0xFF00A000; // Color when the button is in its normal state
+  public static final int BUTTON_COLOR = 0xFF4444FF; // Color when the button is in its normal state
   public static final int BUTTON_BORDER = 0xFF006000;
-  public static final int HOVER_COLOR = 0xFF4444FF; // Color when the mouse is over this button
+  public static final int HOVER_COLOR = 0xFF9F0000; // Color when the mouse is over this button
   public static final int TEXT_COLOR = 0xFFFFFFFF; // The color of the text
 
-  public static final float STAY_OVER_TIME = 60 * 5.0;
-
-  private int x, y, w, h, r; // The x, y, widht, height & radius of the button (radius --> corners)
+  private float x, y, w, h, r; // The x, y, widht, height & radius of the button (radius --> corners)
   private String text; // The text this button contains
   private boolean inside = false; // if the mouse was over the button or not
 
-  public int timeOver = 0;
+  public float timeOver = 0;
   public Class<? extends Screen> toOpen;
   public Screen parent;
 
@@ -45,46 +43,53 @@ public class MenuButton {
    Renders this button
    */
   public void render(int sp) {
+    textFont(createFont("Arial", h, false));
     textAlign(LEFT, LEFT);
-    fill(inside ? HOVER_COLOR : BUTTON_COLOR);
-    stroke(BUTTON_BORDER);
-    rect(x, y, w, h, r, r, r, r);
 
-    for (PVector p : handler.input.getInside(sp)) {
-      if (isInside(p.x, p.y)) {
-        fill(0xFFFF00FF);
-        arc(p.x, p.y, 20, 20, 0, TWO_PI * p.z / STAY_OVER_TIME);
+    float percentage = timeOver / 100.0;
 
-        if (p.z == STAY_OVER_TIME) onClick(p.x, p.y);
-      }
-    }
+    if (percentage == 0) {
+      fill(BUTTON_COLOR);
+      stroke(BUTTON_BORDER);
+      rect(x, y, w, h, r, r, r, r);
+      rect(x, y + h, w, h, r, r, r, r);
+    } else if (percentage <= 1.0) {
+      fill(BUTTON_COLOR);
+      stroke(BUTTON_BORDER);
+      rect(x + (percentage * w), y, (1-percentage) * w, h, 0, r, r, 0);
+      rect(x + (percentage * w), y + h, (1-percentage) * w, h, 0, r, r, 0);
+
+      fill(HOVER_COLOR);
+      stroke(BUTTON_BORDER);
+      rect(x, y, (percentage * w), h, r, 0, 0, r);
+      rect(x, y + h, (percentage *  w), h, r, 0, 0, r);
+    } else onClick();
+
+    if (inside) ++timeOver;
+    else timeOver = 0;
+
 
     noStroke();
 
     float wi = textWidth(text); // Text width to center it
 
     fill(TEXT_COLOR);
-    text(text, x + w / 2 - wi / 2, y + h / 2);
+    text(text, x + w / 2 - wi / 2, y + h - h / 5);
+
+    pushMatrix();
+    rotate(PI);
+    text(text, -width + (x + w / 2 - wi / 2), -(y + h + h / 5));
+    popMatrix();
   }
 
   /**
    Check if mouse is over the button 
    */
   public void handleUserInput(int x, int y) {
-    inside = x >= this.x && x <= this.x + this.w && y >= this.y && y <= this.y + this.h;
+    inside = x >= this.x && x <= this.x + this.w && y >= this.y && y <= this.y + this.h * 2;
   }
 
   public boolean isInside(float x, float y) {
-    return x >= this.x && x <= this.x + this.w && y >= this.y && y <= this.y + this.h;
-  }
-
-  /**
-   If the button has been clicked
-   */
-  public void onClick(float x, float y) {
-    if (x >= this.x && x <= this.x + this.w && y >= this.y && y <= this.y + this.h) {
-      // TODO action
-      onClick();
-    }
+    return x >= this.x && x <= this.x + this.w && y >= this.y && y <= this.y + this.h * 2;
   }
 }

@@ -3,7 +3,7 @@
 */
 public abstract class Game extends Screen {
 
-  protected int userCount = 0;
+  public int userCount = 0;
 
   /**
     Why do I have a variable userCount? I don't know.
